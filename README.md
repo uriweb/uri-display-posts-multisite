@@ -5,3 +5,7 @@ Extends Display Posts to display posts from other sites in a WordPress multisite
 ## Example
 
 ```[display-posts-multisite category="news" posts_per_page="5" blog_id="42" no_posts_message="No news is good news."]```
+
+## Requirements
+
+The [Display Posts](https://displayposts.com) plugin must be installed and active in order for this plugin to extend it.
