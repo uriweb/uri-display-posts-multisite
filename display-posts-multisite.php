@@ -4,7 +4,7 @@ Plugin Name: Display Posts Multisite
 Requires Plugins: display-posts-shortcode
 Plugin URI: 
 Description: Adds a blog_id parameter to display posts from other sites on the network.
-Version: 0.1
+Version: 0.2
 Author: John Pennypacker <john@pennypacker.net>
 Author URI: 
 */
@@ -26,7 +26,7 @@ class DPSMultisite {
 	function __construct() {
 		$this->path = plugin_dir_path( __FILE__ );
 		$this->url = plugin_dir_url( __FILE__ );
-		$this->dpsmulti_switched = FALSE;
+		$this->switched = FALSE;
 		$this->atts = array();
 
 		add_shortcode( 'display-posts-multisite', array( $this, 'dpsmulti_shortcode' ) );
@@ -47,14 +47,14 @@ class DPSMultisite {
 		if( isset( $attributes['blog_id'] ) ) {
 			$site = get_site( $attributes['blog_id'] );
 			if( $site->blog_id ) {
-				$this->dpsmulti_switched = TRUE;
+				$this->switched = TRUE;
 				switch_to_blog( $site->blog_id );
 			}	
 		}
 		$return = be_display_posts_shortcode( $attributes );
-		if( TRUE === $this->dpsmulti_switched ) {
+		if( TRUE === $this->switched ) {
 			restore_current_blog();
-			$this->dpsmulti_switched = FALSE;
+			$this->switched = FALSE;
 		}
 		return $return;
 	}
@@ -66,13 +66,31 @@ class DPSMultisite {
 	 * @return str
 	 */
 	function autofix_permalink( $url ) {
-		if( $this->dpsmulti_switched && FALSE !== strpos( $url, '?p=' ) && isset( $post->post_type ) ) {
+		if( $this->switched && FALSE !== strpos( $url, '?p=' ) ) {
 			global $post;
-			return dpsmulti_get_post_permalink( $post );
+			$pretty_url = $this->get_post_permalink( $post );
+			if( FALSE !== $pretty_url ) {
+				return $pretty_url;
+			}
 		}
 		return $url;
 	}
-
+	
+	/**
+	 * Suss out the permalink based on the rewrite_rules option.
+	 * @param obj $post A post.
+	 * @return str
+	 */
+	function get_post_permalink( $post ) {
+		$rw = get_option( 'rewrite_rules' );
+		$k = array_search( 'index.php?post_type=' . $post->post_type, $rw );
+		if( $k ) {
+			$path = str_replace( '?$', '', $k ) . $post->post_name . '/';
+			$l = get_site_url() . '/' . $path;
+			return $l;
+		}
+		return FALSE;
+	}
 }
 
 new DPSMultisite();
