@@ -1,0 +1,21 @@
+{
+    "name": "uriweb/uri-display-posts-multisite",
+    "type":  "wordpress-plugin",
+    "description": "Extends Display Posts to display posts from other sites in a WordPress multisite network. Forked from johnpennypacker/display-posts-multisite.",
+    "authors": [
+        {
+            "name": "URI Web Communications",
+            "email": "web-group@uri.edu",
+            "homepage": "https://github.com/uriweb"
+        },
+        {
+            "name": "John Pennypacker",
+            "homepage": "https://github.com/johnpennypacker",
+            "role": "Original developer"
+        }
+    ],
+    "homepage": "https://www.uri.edu",
+    "require": {
+        "php": ">=7.4"
+    }
+}
