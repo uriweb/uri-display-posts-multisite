@@ -19,6 +19,12 @@ if ( !defined('ABSPATH') )
  */
 class DPSMultisite {
 
+	 // Declare the properties at the top of the class - (php 8.x deprecates dynamic properties)
+	 private $path;
+	 private $url;
+	 private $switched;
+	 private $atts;
+
 	/**
 	 * Constructor method.
 	 * Sets up instance variables, adds new shortcode, filters permalinks for formatting.
